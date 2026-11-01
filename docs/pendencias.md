@@ -94,10 +94,12 @@ Legenda: **[Você]** = só o usuário pode fazer · **[Decidir]** = espera uma r
 
 - [ ] **[IA]** Rússia, 2º lote (RU2): **jäger** (casaca sem platinas, verde) e **Guarda**; capote **enrolado** no ombro (RU9; rolo de 6½", [V10B] 1809).
 - [ ] **[IA]** Áustria 1809, 1º lote (AT1, AT2), seguindo as 9 fases do `plan.md`:
-  - [x] ficha técnica (Fase 2, rascunho 0.1): `docs/specs/aus_1809.md`; dossiês `docs/research/aus/` (casaca, tschako e barretina de pele, equipamento);
-  - [ ] **[Decidir]** AT1–AT11 (ficha §9): período, lote, regimentos IR 1, 3, 2 e 39, malhas novas;
+  - [x] ficha técnica (Fase 2, versão 1.0): `docs/specs/aus_1809.md`; dossiês `docs/research/aus/` (casaca, tschako e barretina de pele, equipamento);
+  - [x] AT1–AT11 aprovadas em 2026-11-01 (ficha §9): 1809, regimentos IR 1, 3, 2 e 39, malhas novas;
   - [ ] **[IA]** fontes primárias (Teuber & Ottenfeld, HGM) para punhos, gola, placa dos granadeiros e equipamento;
-  - infantaria alemã, húngara e granadeiros (Fases 3–8, depois da aprovação).
+  - [x] Fase 3: blockout do tschako de 1806 (`docs/reports/tschako_aus_blockout.md`);
+  - [ ] Fase 3: barretina de pele dos granadeiros, casaca (alemã e húngara) e calça húngara;
+  - infantaria alemã, húngara e granadeiros (Fases 4–8).
   
   O 2º lote austríaco são Grenzer, Jäger e Landwehr. Plano: `docs/reports/plano_austria_russia.md`.
 
