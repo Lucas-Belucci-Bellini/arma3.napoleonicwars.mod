@@ -98,7 +98,8 @@ Legenda: **[Você]** = só o usuário pode fazer · **[Decidir]** = espera uma r
   - [x] AT1–AT11 aprovadas em 2026-11-01 (ficha §9): 1809, regimentos IR 1, 3, 2 e 39, malhas novas;
   - [ ] **[IA]** fontes primárias (Teuber & Ottenfeld, HGM) para punhos, gola, placa dos granadeiros e equipamento;
   - [x] Fase 3: blockout do tschako de 1806 (`docs/reports/tschako_aus_blockout.md`);
-  - [ ] Fase 3: barretina de pele dos granadeiros, casaca (alemã e húngara) e calça húngara;
+  - [x] Fase 3: blockout da barretina de pele dos granadeiros, 4 variantes (`docs/reports/grenadiermuetze_aus_blockout.md`);
+  - [ ] Fase 3: casaca (alemã e húngara) e calça húngara;
   - infantaria alemã, húngara e granadeiros (Fases 4–8).
   
   O 2º lote austríaco são Grenzer, Jäger e Landwehr. Plano: `docs/reports/plano_austria_russia.md`.
