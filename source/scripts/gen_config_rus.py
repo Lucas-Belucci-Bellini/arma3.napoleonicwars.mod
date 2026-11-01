@@ -20,6 +20,13 @@ U_P3D = "hcl_u_rus1812_linha"
 VARC = json.load(open(os.path.join(ROOT, "source", "textures", "hcl_capote_rus", "variantes_rus_capote.json"),
                       encoding="utf-8"))
 C_P3D = "hcl_u_rus1812_capote"
+# crossbelts and knapsack (build_p3d_equip_rus.py, RU10, dossier HIST-RUS-INF-EQUIP-1812-001): the French meshes with
+# Russian textures; one vest P3D, two textures (pouch grenade with one or three flames, order of 14 Jul 1808)
+V_P3D, B_P3D = "hcl_v_rus1812_correame", "hcl_b_rus1812_mochila"
+VESTS = [("HCL_V_RUS1812_Correame", V_P3D,
+          "Russian Infantry Crossbelts 1812 - musketeer company (whitened, one-flame grenade on the pouch)"),
+         ("HCL_V_RUS1812_Correame_Granadeiro", V_P3D + "_granadeiro",
+          "Russian Infantry Crossbelts 1812 - grenadier company (whitened, three-flame grenade on the pouch)")]
 EXTRA = {"R01": ", also grenadier regiments"}           # red straps in all grenadier regiments from 3 Feb 1811 (V10B)
 # 4 strap colours only: the order of 12 Apr 1812 (V10B) drops the light blue of the 1810 list (decision RU11)
 STRAP = {"R01": "red", "R02": "white", "R03": "yellow", "R04": "dark green piped red"}
@@ -47,16 +54,17 @@ w("// Sources: docs/specs/rus_1812.md; coat docs/reports/uniforme_rus_*.md; kive
 w("")
 w("class CfgPatches\n{\n\tclass HCL_RUS_Teste\n\t{")
 w('\t\tauthor = "Historical Clothing";')
-w("\t\tunits[] = {};")
+units = ["HCL_B_RUS1812_Mochila"]
+w("\t\tunits[] = {" + ", ".join(f'"{x}"' for x in units) + "};")
 weapons = ([f"HCL_U_RUS1812_{v}" for v in sorted(VAR)] + [f"HCL_U_RUS1812_Capote_{v}" for v in sorted(VARC)]
-           + [k[2] for k in KIVERS])
+           + [k[2] for k in KIVERS] + [v[0] for v in VESTS])
 w("\t\tweapons[] = {" + ", ".join(f'"{x}"' for x in weapons) + "};")
 w("\t\trequiredVersion = 0.1;")
-w('\t\trequiredAddons[] = {"A3_Characters_F"};')
+w('\t\trequiredAddons[] = {"A3_Characters_F", "A3_Weapons_F_Ammoboxes"};')
 w("\t};\n};\n")
 
 w("class CfgVehicles\n{")
-w("\tclass B_Soldier_base_F;\n")
+w("\tclass B_Soldier_base_F;\n\tclass Bag_Base;\n")
 ids = sorted(VAR)
 w("\tclass HCL_RUS1812_Soldado_Base: B_Soldier_base_F\n\t{")
 w('\t\tauthor = "Historical Clothing";')
@@ -86,11 +94,21 @@ for v in sorted(VARC):
     w(f'\t\tuniformClass = "HCL_U_RUS1812_Capote_{v}";')
     w(f'\t\thiddenSelectionsTextures[] = {{"{P}\\data\\{VARC[v]["prefixo"]}_co.paa"}};')
     w("\t};")
+w("\tclass HCL_B_RUS1812_Mochila: Bag_Base\n\t{")
+w('\t\tauthor = "Historical Clothing";\n\t\tscope = 2;')
+w(f'\t\tdisplayName = "Russian Infantry Knapsack 1812 (black leather){T}";')
+w('\t\tpicture = "\\A3\\Weapons_F\\Ammoboxes\\Bags\\data\\ui\\backpack_CA.paa";')
+w(f'\t\tmodel = "{P}\\{B_P3D}.p3d";')
+w('\t\thiddenSelections[] = {"camo"};')
+w(f'\t\thiddenSelectionsTextures[] = {{"{P}\\data\\{B_P3D}_co.paa"}};')
+w("\t\tmaximumLoad = 160;\n\t\tmass = 20;")
+w("\t};")
 w("};\n")
 
 w("class CfgWeapons\n{")
 w("\tclass ItemCore;\n\tclass UniformItem;\n\tclass Uniform_Base;")
-w("\tclass H_HelmetB: ItemCore\n\t{\n\t\tclass ItemInfo;\n\t};\n")
+w("\tclass H_HelmetB: ItemCore\n\t{\n\t\tclass ItemInfo;\n\t};")
+w("\tclass Vest_Camo_Base: ItemCore\n\t{\n\t\tclass ItemInfo;\n\t};\n")
 for v in ids:
     w(f"\tclass HCL_U_RUS1812_{v}: Uniform_Base\n\t{{")
     w('\t\tauthor = "Historical Clothing";\n\t\tscope = 2;')
@@ -136,16 +154,29 @@ for p3d_base, tex, cls, name in KIVERS:
     w("\t\t\tclass HitpointsProtectionInfo\n\t\t\t{\n\t\t\t\tclass Head\n\t\t\t\t{")
     w('\t\t\t\t\thitpointName = "HitHead";\n\t\t\t\t\tarmor = 0;\n\t\t\t\t\tpassThrough = 1;')
     w("\t\t\t\t};\n\t\t\t};\n\t\t};\n\t};")
+for cls, co, name in VESTS:
+    w(f"\tclass {cls}: Vest_Camo_Base\n\t{{")
+    w('\t\tauthor = "Historical Clothing";\n\t\tscope = 2;')
+    w(f'\t\tdisplayName = "{name}{T}";')
+    w('\t\tdescriptionShort = "HCL test - no protection";')
+    w('\t\tpicture = "\\A3\\characters_f\\Data\\UI\\icon_V_BandollierB_CA.paa";')
+    w('\t\thiddenSelections[] = {"camo"};')
+    w(f'\t\thiddenSelectionsTextures[] = {{"{P}\\data\\{co}_co.paa"}};')
+    w("\t\tclass ItemInfo: ItemInfo\n\t\t{")
+    w(f'\t\t\tuniformModel = "{P}\\{V_P3D}.p3d";')
+    w('\t\t\thiddenSelections[] = {"camo"};')
+    w('\t\t\tcontainerClass = "Supply100";\n\t\t\tmass = 15;')
+    w("\t\t};\n\t};")
 w("};")
 txt = "\n".join(o) + "\n"
 assert all(ord(c) < 128 for c in txt), "config must be ASCII"
 assert txt.count("{") == txt.count("}"), "chaves desbalanceadas"
 open(os.path.join(SRC, "config.cpp"), "w", encoding="ascii", newline="\r\n").write(txt)
-print("OK config.cpp", len(txt), "bytes;", len(weapons), "items +", len(ids) + len(VARC), "soldier classes")
+print("OK config.cpp", len(txt), "bytes;", len(weapons), "items +", len(ids) + len(VARC), "soldier classes +", len(units), "backpacks")
 
 # ---------------------------------------------------------------- model.cfg: skeleton from hcl_pruss, our classes
 mc = open(os.path.join(ROOT, "source", "addon", "hcl", "hcl_pruss", "model.cfg"), encoding="latin-1").read()
-models = [U_P3D, C_P3D] + sorted({k[0] for k in KIVERS})
+models = [U_P3D, C_P3D] + sorted({k[0] for k in KIVERS}) + [V_P3D, B_P3D]
 mc = re.sub(r"(\tclass hcl_\w+: ArmaMan \{\};\r?\n)+", "".join(f"\tclass {m}: ArmaMan {{}};\n" for m in models), mc)
 mc = mc.replace("test addon hcl_pruss", "test addon hcl_rus")
 assert all(f"class {m}: ArmaMan" in mc for m in models) and "hcl_pruss" not in mc
@@ -153,10 +184,10 @@ open(os.path.join(SRC, "model.cfg"), "w", encoding="ascii", newline="\r\n").writ
 print("OK model.cfg:", len(models), "CfgModels classes")
 
 # ---------------------------------------------------------------- checks: every file the config points to
-need_p3d = {U_P3D + ".p3d", C_P3D + ".p3d"} | {k[0] + ".p3d" for k in KIVERS}
+need_p3d = {U_P3D + ".p3d", C_P3D + ".p3d", V_P3D + ".p3d", B_P3D + ".p3d"} | {k[0] + ".p3d" for k in KIVERS}
 missing = [f for f in need_p3d if not os.path.exists(os.path.join(SRC, f))]
 paa = sorted(set(re.findall(r"\\hcl\\hcl_rus\\data\\(\w+)\.paa", txt)))
-src_png = {os.path.splitext(f)[0] for d in ("hcl_uniforme_rus", "hcl_capote_rus", "hcl_kiver_rus")
+src_png = {os.path.splitext(f)[0] for d in ("hcl_uniforme_rus", "hcl_capote_rus", "hcl_kiver_rus", "hcl_equipamento_rus")
            for f in os.listdir(os.path.join(ROOT, "source", "textures", d)) if f.endswith(".png")}
 no_png = [p for p in paa if p not in src_png]
 print("P3D referenciados:", len(need_p3d), "faltando:", missing)

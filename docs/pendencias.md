@@ -1,6 +1,6 @@
 # Pendências: tudo o que falta fazer
 
-Atualizado em 2026-10-31 (RU11 decidida: 4 cores de platina). Arquivo único, pedido pelo usuário (*"cria um arquivo para tudo que tem que ser feito"*).
+Atualizado em 2026-11-01 (RU10 feita: correame e mochila). Arquivo único, pedido pelo usuário (*"cria um arquivo para tudo que tem que ser feito"*).
 - **O que tem aqui:** as pendências da Rússia (em andamento) e da Áustria (planejada).
 - **O que não tem:** as decisões antigas da Prússia, França e Reino Unido, que continuam em `docs/plan.md` §6 (D7–D12, U1, U7, V-A…V-E).
 
@@ -35,21 +35,17 @@ Legenda: **[Você]** = só o usuário pode fazer · **[Decidir]** = espera uma r
 - [x] Pesos (por posição, do capote francês), LODs Res 2–4, P3D, `.rvmat` e config (4 soldados e 4 uniformes de capote). Relatório: `docs/reports/capote_rus_p3d.md`.
 - [ ] **[Decidir]** Orçamento: 13.900 triângulos contra a meta de 12.000. Reduzir a saia (2 × 1.856)?
 
-### 3.2 Correame e mochila (RU10) **[IA]**
+### 3.2 Correame e mochila (RU10) **[feito]**
 
-- [ ] Dossiê `HIST-RUS-INF-EQUIP-1812-001`, a partir do [V10B]:
-  - correias de couro branqueado cruzadas (1807);
-  - cartucheira de couro preto de 254 × 190 mm (1808), com **granadas nos cantos nos granadeiros** (1808);
-  - tesak;
-  - mochila retangular de couro preto (1808);
-  - cantil.
-- [ ] Retexturizar o correame e a mochila franceses (`build_equipamento_producao.py nacao=fr`, como o K4 britânico): pintor, variantes (mosqueteiro / granadeiro), P3D e config (colete e mochila).
+- [x] Dossiê `docs/research/rus/HIST-RUS-INF-EQUIP-1812-001.md` (V10B): correias branqueadas; cartucheira preta com a granada do kiver (1 chama mosqueteiros, 3 granadeiros, 14 jul 1808); bainha natural; mochila toda preta em correias não branqueadas (1809); capote fora da mochila.
+- [x] Malha francesa retexturizada: 2 coletes, 1 mochila (sem o rolo do capote), P3D, `.rvmat` e config. Relatório: `docs/reports/equipamento_rus.md`.
+- [ ] (2º lote) Cantil, terceira correia no peito e cartucheira no tamanho de 1808 (254 × 190 mm).
 
 ### 3.3 Granadeiros **[IA]**
 
 - [x] Kivers de granadeiro (12 classes no config) e platina vermelha dos regimentos de granadeiros (R01/C01).
 - [ ] (Opcional) Classes de soldado "granadeiro" já com o kiver de granadeiro em `linkedItems`.
-- [ ] Granadas da cartucheira, junto com o §3.2.
+- [x] Granadas da cartucheira (colete `HCL_V_RUS1812_Correame_Granadeiro`, §3.2).
 
 ### 3.4 Com o atlas do mod (depois do B3)
 

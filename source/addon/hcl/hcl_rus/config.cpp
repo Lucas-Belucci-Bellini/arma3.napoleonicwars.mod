@@ -9,16 +9,17 @@ class CfgPatches
 	class HCL_RUS_Teste
 	{
 		author = "Historical Clothing";
-		units[] = {};
-		weapons[] = {"HCL_U_RUS1812_R01", "HCL_U_RUS1812_R02", "HCL_U_RUS1812_R03", "HCL_U_RUS1812_R04", "HCL_U_RUS1812_Capote_C01", "HCL_U_RUS1812_Capote_C02", "HCL_U_RUS1812_Capote_C03", "HCL_U_RUS1812_Capote_C04", "HCL_H_RUS1812_Mosqueteiro_B1", "HCL_H_RUS1812_Mosqueteiro_B2", "HCL_H_RUS1812_Mosqueteiro_B3", "HCL_H_RUS1812_Granadeiro_B1", "HCL_H_RUS1812_Granadeiro_B2", "HCL_H_RUS1812_Granadeiro_B3", "HCL_H_RUS1808_Mosqueteiro_B1", "HCL_H_RUS1808_Mosqueteiro_B2", "HCL_H_RUS1808_Mosqueteiro_B3", "HCL_H_RUS1808_Granadeiro_B1", "HCL_H_RUS1808_Granadeiro_B2", "HCL_H_RUS1808_Granadeiro_B3"};
+		units[] = {"HCL_B_RUS1812_Mochila"};
+		weapons[] = {"HCL_U_RUS1812_R01", "HCL_U_RUS1812_R02", "HCL_U_RUS1812_R03", "HCL_U_RUS1812_R04", "HCL_U_RUS1812_Capote_C01", "HCL_U_RUS1812_Capote_C02", "HCL_U_RUS1812_Capote_C03", "HCL_U_RUS1812_Capote_C04", "HCL_H_RUS1812_Mosqueteiro_B1", "HCL_H_RUS1812_Mosqueteiro_B2", "HCL_H_RUS1812_Mosqueteiro_B3", "HCL_H_RUS1812_Granadeiro_B1", "HCL_H_RUS1812_Granadeiro_B2", "HCL_H_RUS1812_Granadeiro_B3", "HCL_H_RUS1808_Mosqueteiro_B1", "HCL_H_RUS1808_Mosqueteiro_B2", "HCL_H_RUS1808_Mosqueteiro_B3", "HCL_H_RUS1808_Granadeiro_B1", "HCL_H_RUS1808_Granadeiro_B2", "HCL_H_RUS1808_Granadeiro_B3", "HCL_V_RUS1812_Correame", "HCL_V_RUS1812_Correame_Granadeiro"};
 		requiredVersion = 0.1;
-		requiredAddons[] = {"A3_Characters_F"};
+		requiredAddons[] = {"A3_Characters_F", "A3_Weapons_F_Ammoboxes"};
 	};
 };
 
 class CfgVehicles
 {
 	class B_Soldier_base_F;
+	class Bag_Base;
 
 	class HCL_RUS1812_Soldado_Base: B_Soldier_base_F
 	{
@@ -91,6 +92,18 @@ class CfgVehicles
 		uniformClass = "HCL_U_RUS1812_Capote_C04";
 		hiddenSelectionsTextures[] = {"\hcl\hcl_rus\data\hcl_u_rus1812_capote_v04_co.paa"};
 	};
+	class HCL_B_RUS1812_Mochila: Bag_Base
+	{
+		author = "Historical Clothing";
+		scope = 2;
+		displayName = "Russian Infantry Knapsack 1812 (black leather) (HCL test)";
+		picture = "\A3\Weapons_F\Ammoboxes\Bags\data\ui\backpack_CA.paa";
+		model = "\hcl\hcl_rus\hcl_b_rus1812_mochila.p3d";
+		hiddenSelections[] = {"camo"};
+		hiddenSelectionsTextures[] = {"\hcl\hcl_rus\data\hcl_b_rus1812_mochila_co.paa"};
+		maximumLoad = 160;
+		mass = 20;
+	};
 };
 
 class CfgWeapons
@@ -99,6 +112,10 @@ class CfgWeapons
 	class UniformItem;
 	class Uniform_Base;
 	class H_HelmetB: ItemCore
+	{
+		class ItemInfo;
+	};
+	class Vest_Camo_Base: ItemCore
 	{
 		class ItemInfo;
 	};
@@ -561,6 +578,40 @@ class CfgWeapons
 					passThrough = 1;
 				};
 			};
+		};
+	};
+	class HCL_V_RUS1812_Correame: Vest_Camo_Base
+	{
+		author = "Historical Clothing";
+		scope = 2;
+		displayName = "Russian Infantry Crossbelts 1812 - musketeer company (whitened, one-flame grenade on the pouch) (HCL test)";
+		descriptionShort = "HCL test - no protection";
+		picture = "\A3\characters_f\Data\UI\icon_V_BandollierB_CA.paa";
+		hiddenSelections[] = {"camo"};
+		hiddenSelectionsTextures[] = {"\hcl\hcl_rus\data\hcl_v_rus1812_correame_co.paa"};
+		class ItemInfo: ItemInfo
+		{
+			uniformModel = "\hcl\hcl_rus\hcl_v_rus1812_correame.p3d";
+			hiddenSelections[] = {"camo"};
+			containerClass = "Supply100";
+			mass = 15;
+		};
+	};
+	class HCL_V_RUS1812_Correame_Granadeiro: Vest_Camo_Base
+	{
+		author = "Historical Clothing";
+		scope = 2;
+		displayName = "Russian Infantry Crossbelts 1812 - grenadier company (whitened, three-flame grenade on the pouch) (HCL test)";
+		descriptionShort = "HCL test - no protection";
+		picture = "\A3\characters_f\Data\UI\icon_V_BandollierB_CA.paa";
+		hiddenSelections[] = {"camo"};
+		hiddenSelectionsTextures[] = {"\hcl\hcl_rus\data\hcl_v_rus1812_correame_granadeiro_co.paa"};
+		class ItemInfo: ItemInfo
+		{
+			uniformModel = "\hcl\hcl_rus\hcl_v_rus1812_correame.p3d";
+			hiddenSelections[] = {"camo"};
+			containerClass = "Supply100";
+			mass = 15;
 		};
 	};
 };

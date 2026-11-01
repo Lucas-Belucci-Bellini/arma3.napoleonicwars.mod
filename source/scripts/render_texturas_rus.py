@@ -7,7 +7,9 @@
 #   blender -b --factory-startup --python render_texturas_rus.py -- <project root> <out dir> [samples=48]
 #           [variantes=R01,R02,...] [kiver=1812_mosqueteiro]
 #           [peca=capote]: the greatcoat (build_capote_rus.py, variantes_rus_capote.json) instead of the coat
-import bpy, sys, os, math, json
+#           [equipamento=1]: crossbelts and knapsack (RU10, generate_equipment_textures_rus.py) on every soldier,
+#           the grenadier vest (three-flame pouch grenade) on the first, without the French greatcoat roll
+import bpy, bmesh, sys, os, math, json
 from mathutils import Vector
 
 a = sys.argv[sys.argv.index("--") + 1:]
@@ -25,6 +27,9 @@ else:
     COAT = J("source", "models", "coats", "hcl_uniforme_rus", "hcl_uniforme_rus_linha_LOD0.blend")
     COAT_OBJ, TXU, VJSON, MAPAS = "HCL_U_RUS1812_Linha_LOD0", J("source", "textures", "hcl_uniforme_rus"),         "variantes_rus_linha.json", "hcl_u_rus1812_linha"
 NOMEF = "textura_soldado_rus" if PECA == "linha" else f"textura_{PECA}_rus"
+EQUIP = OPT.get("equipamento") == "1"
+if EQUIP:
+    NOMEF = NOMEF.replace("textura_", "equipamento_")
 VAR = json.load(open(os.path.join(TXU, VJSON), encoding="utf-8"))
 VIDS = OPT.get("variantes", ",".join(VAR)).split(",")
 KTAG = OPT.get("kiver", "1812_mosqueteiro")
@@ -92,6 +97,26 @@ if head0:
     head0.parent = None
     head0.matrix_world = mw
     head0.data.materials.clear(); head0.data.materials.append(skin)
+eq0 = {}
+if EQUIP:                                                # same deletion as build_p3d_equip_rus.py (dossier E8)
+    TE = J("source", "textures", "hcl_equipamento_rus")
+    eq0 = load(J("source", "models", "accessories", "hcl_equipamento_fr", "hcl_equipamento_fr_LOD0.blend"),
+               ["HCL_V_Fr1812_Correame_LOD0", "HCL_B_Fr1812_Havresac_LOD0"])
+    pk = eq0["HCL_B_Fr1812_Havresac_LOD0"]
+    kill = {i for i, n in enumerate(pk["hcl_partes"].split(",")) if n.startswith("capote")}
+    bm = bmesh.new(); bm.from_mesh(pk.data)
+    lay = bm.faces.layers.int.get("hcl_part")
+    bmesh.ops.delete(bm, geom=[f for f in bm.faces if f[lay] in kill], context="FACES")
+    bm.to_mesh(pk.data); bm.free()
+    EQM = {}
+    for b in ("hcl_v_rus1812_correame", "hcl_v_rus1812_correame_granadeiro", "hcl_b_rus1812_mochila"):
+        EQM[b] = textured(b, os.path.join(TE, b + "_co.png"), os.path.join(TE, b + "_nohq.png"),
+                          os.path.join(TE, b + "_smdi.png"), True)
+    for o in eq0.values():
+        o.data.uv_layers.active = o.data.uv_layers["UVMap"]
+        o.data.materials.clear(); o.data.materials.append(EQM["hcl_b_rus1812_mochila"])
+        for p in o.data.polygons:
+            p.material_index = 0; p.use_smooth = True
 soldiers = []
 for i, vid in enumerate(VIDS):
     v = VAR[vid]
@@ -113,6 +138,15 @@ for i, vid in enumerate(VIDS):
         if i:
             sc.collection.objects.link(o)
             o.location.x = base.location.x + x
+        parts.append(o)
+    for base in eq0.values():
+        o = base if i == 0 else base.copy()
+        if i:
+            sc.collection.objects.link(o)
+            o.location.x = base.location.x + x
+        o.material_slots[0].link = "OBJECT"
+        o.material_slots[0].material = EQM["hcl_b_rus1812_mochila" if o.name.startswith("HCL_B") else
+                                           "hcl_v_rus1812_correame_granadeiro" if i == 0 else "hcl_v_rus1812_correame"]
         parts.append(o)
     for o in parts:
         o.hide_render = False                            # the game blend keeps its objects hidden in renders
@@ -156,4 +190,9 @@ shot("abas_costas", (0.0, 3.0, 0.05), (0.0, 0.0, 0.05), 1.05, (1100, 1300))
 shot("punho", (1.2, -2.6, 0.30), (0.57, 0.08, 0.13), 0.30, (1100, 1100))
 shot("polainas", (-0.6, -3.0, -0.55), (0.0, 0.0, -0.55), 0.80, (1200, 1000))
 shot("ombro", (0.25, -2.4, 1.40), (0.15, 0.04, 0.55), 0.40, (1100, 1100))
+if EQUIP:                                                # the pouch (behind, on the right hip) with its grenade badge
+    shot("cartucheira", (-0.95, 2.8, 0.15), (-0.145, 0.21, 0.0), 0.38, (1100, 1000))
+    only({soldiers[1][0]} if len(soldiers) > 1 else {soldiers[0][0]})
+    shot("cartucheira_mosqueteiro", (-0.95 + soldiers[min(1, len(soldiers) - 1)][1], 2.8, 0.15),
+         (-0.145 + soldiers[min(1, len(soldiers) - 1)][1], 0.21, 0.0), 0.38, (1100, 1000))
 print("FIM")
